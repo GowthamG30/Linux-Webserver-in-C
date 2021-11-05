@@ -2,7 +2,11 @@
 #include "request.h"
 
 #define MAXBUF (8192)
+#define Q_MAX (1000)
 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
+pthread_cond_t full = PTHREAD_COND_INITIALIZER;
 
 //
 //	TODO: add code to create and manage the buffer
@@ -11,56 +15,152 @@
 // Request Buffer
 // ----------------------------------------------------------------
 typedef struct Request_t {
-  char *filename;
-  int filesize;
-  int fd;
-  struct Request_t *next;
+    char *filename;
+    int filesize;
+    int fd;
+    struct Request_t *next;
 } Request;
 
 void makeRequest(Request *r, char *filename, int filesize, int fd) {
-  r->filename = strdup(filename);
-  r->filesize = filesize;
-  r->fd = fd;
-  r->next = NULL;
+    r->filename = strdup(filename);
+    r->filesize = filesize;
+    r->fd = fd;
+    r->next = NULL;
 }
 
 void printRequest(Request r) {
-  printf("Request: fd = %d, filename = %s, filesize = %d\n", r.fd, r.filename, r.filesize);
+    printf("Request: fd = %d, filename = %s, filesize = %d\n", r.fd, r.filename, r.filesize);
 }
 
-void requestToRequest(Request *t, Request *r) {
-  t->filename = strdup(r->filename);
-  t->filesize = r->filesize;
-  t->fd = r->fd;
-  t->next = r->next;
-}
+// void requestToRequest(Request *t, Request *r) {
+//     t->filename = strdup(r->filename);
+//     t->filesize = r->filesize;
+//     t->fd = r->fd;
+//     t->next = r->next;
+// }
 // ----------------------------------------------------------------
 
 // Queue
 // ----------------------------------------------------------------
 typedef struct Queue_t {
-  Request *front;
-  Request *rear;
-  int count;
+    Request *front;
+    Request *rear;
+    int count;
 } Queue;
 
 void Queue_init(Queue *qp) {
-  qp->front = NULL;
-  qp->rear = NULL;
-  qp->count = 0;
+    qp->front = NULL;
+    qp->rear = NULL;
+    qp->count = 0;
 }
 
+Queue* Queue_create() {
+    Queue* q = (Queue*)malloc(sizeof(Queue));
+    q->count = 0;
+    q->front = NULL;
+    q->rear = NULL;
+  return q;
+}
 
+int Queue_is_empty(Queue* q) {
+    if(q->front == NULL && q->rear == NULL) {
+        return 1;
+    }
+    return 0;
+}
+
+int Queue_is_full(Queue* q) { // use this later
+    if(q->count == Q_MAX) {
+        return 1;
+    }
+    return 0;
+}
 // ----------------------------------------------------------------
 
 // First In First Out (FIFO)
 // ----------------------------------------------------------------
+void insertFIFO(Queue *q, char *filename, int filesize, int fd) {
+    Request *r = (Request*)malloc(sizeof(Request));
+    makeRequest(r, filename, filesize, fd);
+    if(Queue_is_full(q)) {
+        printf("Queue is full\n");
+        return;
+    }
+    else if(Queue_is_empty(q)) {
+        q->front = r;
+        q->rear = r;
+    }
+    else {
+        q->rear->next = r;
+        q->rear = r;
+    }
+    q->count++;
+}
 
+void deleteFIFO(Queue *q, Request *r) {
+    if(Queue_is_empty(q)) {
+        printf("Queue is empty\n");
+        return;
+    }
+    makeRequest(r, q->front->filename, q->front->filesize, q->front->fd);
+    Request *temp = q->front;
+    q->front = q->front->next;
+    free(temp);
+    q->count--;
+}
 // ----------------------------------------------------------------
 
 // Smallest File First (SFF)
 // ----------------------------------------------------------------
+void insertSFF(Queue *q, char *filename, int filesize, int fd) {
+    Request *r = (Request*)malloc(sizeof(Request));
+    makeRequest(r, filename, filesize, fd);
+    if(Queue_is_full(q)) {
+        printf("Queue is full\n");
+        return;
+    }
+    else if(Queue_is_empty(q)) {
+        q->front = r;
+        q->rear = r;
+    }
+    else {
+        if(r->filesize < q->front->filesize) {
+            r->next = q->front;
+            q->front = r;
+        }
+        else {
+            Request *ptr = q->front;
+            while(ptr->next != NULL && ptr->next->filesize < r->filesize) {
+                ptr = ptr->next;
+            }
+            r->next = ptr->next;
+            ptr->next = r;
+        }
+    }
+    q->count++;
+}
 
+void deleteSFF(Queue *q, Request *r) {
+    if(Queue_is_empty(q)) {
+        printf("Queue is empty\n");
+        return;
+    }
+    makeRequest(r, q->front->filename, q->front->filesize, q->front->fd);
+    Request *temp = q->front;
+    q->front = q->front->next;
+    free(temp);
+    q->count--;
+}
+// ----------------------------------------------------------------
+
+
+// Global Buffers for FIFO and SFF
+// ----------------------------------------------------------------
+// Queue f_temp = { .front = NULL, .rear = NULL, .count = 0 };
+// Queue *f = &f_temp;
+
+Queue s_temp = { .front = NULL, .rear = NULL, .count = 0 };
+Queue *s = &s_temp;
 // ----------------------------------------------------------------
 
 //
@@ -190,6 +290,25 @@ void request_serve_static(int fd, char *filename, int filesize) {
 void* thread_request_serve_static(void* arg)
 {
 	// TODO: write code to actualy respond to HTTP requests
+    while(1) {
+        sleep(1);
+        pthread_mutex_lock(&mutex);
+        while(s->count == 0)
+            pthread_cond_wait(&full, &mutex);
+        Request r;
+        if(scheduling_algo)
+            deleteSFF(s, &r);
+        else
+            deleteFIFO(s, &r);
+        printf("Request for %s is removed from the buffer\n", r.filename);
+
+        pthread_cond_signal(&empty);
+        pthread_mutex_unlock(&mutex);
+
+        // Serving request
+        request_serve_static(r.fd, r.filename, r.filesize);
+        close_or_die(r.fd);
+    }
 }
 
 //
@@ -216,6 +335,12 @@ void request_handle(int fd) {
 	// check requested content type (static/dynamic)
     is_static = request_parse_uri(uri, filename, cgiargs);
     
+    // TODO Security check - ////////////////////////
+    if(strstr(filename, "..") != NULL) {
+        request_error(fd, filename, "403", "Forbidden", "Traversing up in filesystem is not allowed");
+        return;
+    }
+
 	// get some data regarding the requested file, also check if requested file is present on server
     if (stat(filename, &sbuf) < 0) {
 		request_error(fd, filename, "404", "Not found", "server could not find this file");
@@ -231,6 +356,22 @@ void request_handle(int fd) {
 		
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
 
+        pthread_mutex_lock(&mutex);
+        while(s->count == Q_MAX)
+            pthread_cond_wait(&empty, &mutex);
+        if(scheduling_algo) {
+            insertSFF(s, fd, filename, sbuf.st_size);
+        }
+        else {
+            insertFIFO(s, fd, filename, sbuf.st_size);
+        }
+        printf("Request for %s is added to the buffer\n",filename);
+        if(scheduling_algo)
+            printf("Added size SFF = %d\n",s->count);
+        else
+            printf("Added size FIFO = %d\n",s->count);
+        pthread_cond_signal(&full);
+        pthread_mutex_unlock(&mutex);
     } else {
 		request_error(fd, filename, "501", "Not Implemented", "server does not serve dynamic content request");
     }
