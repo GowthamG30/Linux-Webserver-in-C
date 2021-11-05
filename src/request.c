@@ -8,6 +8,61 @@
 //	TODO: add code to create and manage the buffer
 //
 
+// Request Buffer
+// ----------------------------------------------------------------
+typedef struct Request_t {
+  char *filename;
+  int filesize;
+  int fd;
+  struct Request_t *next;
+} Request;
+
+void makeRequest(Request *r, char *filename, int filesize, int fd) {
+  r->filename = strdup(filename);
+  r->filesize = filesize;
+  r->fd = fd;
+  r->next = NULL;
+}
+
+void printRequest(Request r) {
+  printf("Request: fd = %d, filename = %s, filesize = %d\n", r.fd, r.filename, r.filesize);
+}
+
+void requestToRequest(Request *t, Request *r) {
+  t->filename = strdup(r->filename);
+  t->filesize = r->filesize;
+  t->fd = r->fd;
+  t->next = r->next;
+}
+// ----------------------------------------------------------------
+
+// Queue
+// ----------------------------------------------------------------
+typedef struct Queue_t {
+  Request *front;
+  Request *rear;
+  int count;
+} Queue;
+
+void Queue_init(Queue *qp) {
+  qp->front = NULL;
+  qp->rear = NULL;
+  qp->count = 0;
+}
+
+
+// ----------------------------------------------------------------
+
+// First In First Out (FIFO)
+// ----------------------------------------------------------------
+
+// ----------------------------------------------------------------
+
+// Smallest File First (SFF)
+// ----------------------------------------------------------------
+
+// ----------------------------------------------------------------
+
 //
 // Sends out HTTP response in case of errors
 //
