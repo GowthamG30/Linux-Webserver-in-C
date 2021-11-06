@@ -48,18 +48,12 @@ typedef struct Queue_t {
     int count;
 } Queue;
 
-void Queue_init(Queue *qp) {
-    qp->front = NULL;
-    qp->rear = NULL;
-    qp->count = 0;
-}
-
 Queue* Queue_create() {
     Queue* q = (Queue*)malloc(sizeof(Queue));
     q->count = 0;
     q->front = NULL;
     q->rear = NULL;
-  return q;
+    return q;
 }
 
 int Queue_is_empty(Queue* q) {
@@ -159,8 +153,7 @@ void deleteSFF(Queue *q, Request *r) {
 // Queue f_temp = { .front = NULL, .rear = NULL, .count = 0 };
 // Queue *f = &f_temp;
 
-Queue s_temp = { .front = NULL, .rear = NULL, .count = 0 };
-Queue *s = &s_temp;
+Queue *s = NULL;
 // ----------------------------------------------------------------
 
 //
@@ -356,20 +349,23 @@ void request_handle(int fd) {
 		
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
 
+        if(s==NULL) {
+            s = Queue_create();
+        }
         pthread_mutex_lock(&mutex);
         while(s->count == Q_MAX)
             pthread_cond_wait(&empty, &mutex);
         if(scheduling_algo) {
-            insertSFF(s, fd, filename, sbuf.st_size);
+            insertSFF(s, filename, sbuf.st_size, fd);
         }
         else {
-            insertFIFO(s, fd, filename, sbuf.st_size);
+            insertFIFO(s, filename, sbuf.st_size, fd);
         }
         printf("Request for %s is added to the buffer\n",filename);
         if(scheduling_algo)
-            printf("Added size SFF = %d\n",s->count);
+            printf("Added size SFF = %d\n", s->count);
         else
-            printf("Added size FIFO = %d\n",s->count);
+            printf("Added size FIFO = %d\n", s->count);
         pthread_cond_signal(&full);
         pthread_mutex_unlock(&mutex);
     } else {
