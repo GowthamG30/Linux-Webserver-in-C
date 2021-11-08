@@ -29,42 +29,29 @@ void makeRequest(Request *r, char *filename, int filesize, int fd) {
 }
 
 void printRequest(Request r) {
-    printf("Request: fd = %d, filename = %s, filesize = %d\n", r.fd, r.filename, r.filesize);
+    printf("Request: filename = %s, filesize = %d, fd = %d\n", r.filename, r.filesize, r.fd);
 }
-
-// void requestToRequest(Request *t, Request *r) {
-//     t->filename = strdup(r->filename);
-//     t->filesize = r->filesize;
-//     t->fd = r->fd;
-//     t->next = r->next;
-// }
 // ----------------------------------------------------------------
 
-// Queue
+// Buffer
 // ----------------------------------------------------------------
-typedef struct Queue_t {
+typedef struct Buffer_t {
     Request *front;
     Request *rear;
     int count;
-} Queue;
+} Buffer;
 
-Queue* Queue_create() {
-    Queue* q = (Queue*)malloc(sizeof(Queue));
-    q->count = 0;
-    q->front = NULL;
-    q->rear = NULL;
-    return q;
-}
-
-int Queue_is_empty(Queue* q) {
-    if(q->front == NULL && q->rear == NULL) {
+// Check if Buffer is empty
+int BufferIsEmpty(Buffer* buf) {
+    if(buf->front == NULL && buf->rear == NULL) {
         return 1;
     }
     return 0;
 }
 
-int Queue_is_full(Queue* q) { // use this later
-    if(q->count == Q_MAX) {
+// Check if Buffer is full
+int BufferIsFull(Buffer* buf) {
+    if(buf->count == buffer_max_size) {
         return 1;
     }
     return 0;
@@ -73,57 +60,70 @@ int Queue_is_full(Queue* q) { // use this later
 
 // First In First Out (FIFO)
 // ----------------------------------------------------------------
-void insertFIFO(Queue *q, char *filename, int filesize, int fd) {
+void insertFIFO(Buffer *buf, char *filename, int filesize, int fd) {
+    // Create and make request
     Request *r = (Request*)malloc(sizeof(Request));
     makeRequest(r, filename, filesize, fd);
-    if(Queue_is_full(q)) {
-        printf("Queue is full\n");
+
+    if(BufferIsFull(buf)) {
+        printf("Buffer is full\n");
         return;
     }
-    else if(Queue_is_empty(q)) {
-        q->front = r;
-        q->rear = r;
+    else if(BufferIsEmpty(buf)) {
+        buf->front = r;
+        buf->rear = r;
     }
     else {
-        q->rear->next = r;
-        q->rear = r;
+        buf->rear->next = r;
+        buf->rear = r;
     }
-    q->count++;
+    buf->count++;
 }
 
-void deleteFIFO(Queue *q, Request *r) {
-    if(Queue_is_empty(q)) {
-        printf("Queue is empty\n");
+void deleteFIFO(Buffer *buf, Request *r) {
+    if(BufferIsEmpty(buf)) {
+        printf("Buffer is empty\n");
         return;
     }
-    makeRequest(r, q->front->filename, q->front->filesize, q->front->fd);
-    Request *temp = q->front;
-    q->front = q->front->next;
+
+    // Backup data into 'r'
+    makeRequest(r, buf->front->filename, buf->front->filesize, buf->front->fd);
+    Request *temp = buf->front;
+    if(buf->front == buf->rear) {
+        buf->front = NULL;
+        buf->rear = NULL;
+    }
+    else {
+        buf->front = buf->front->next;
+    }
     free(temp);
-    q->count--;
+    buf->count--;
 }
 // ----------------------------------------------------------------
 
 // Smallest File First (SFF)
 // ----------------------------------------------------------------
-void insertSFF(Queue *q, char *filename, int filesize, int fd) {
+void insertSFF(Buffer *buf, char *filename, int filesize, int fd) {
+	// Create and make Request
     Request *r = (Request*)malloc(sizeof(Request));
     makeRequest(r, filename, filesize, fd);
-    if(Queue_is_full(q)) {
-        printf("Queue is full\n");
+
+    if(BufferIsFull(buf)) {
+        printf("Buffer is full\n");
         return;
     }
-    else if(Queue_is_empty(q)) {
-        q->front = r;
-        q->rear = r;
+    else if(BufferIsEmpty(buf)) {
+        buf->front = r;
+        buf->rear = r;
     }
     else {
-        if(r->filesize < q->front->filesize) {
-            r->next = q->front;
-            q->front = r;
+		// Insert at start condition
+        if(r->filesize < buf->front->filesize) {
+            r->next = buf->front;
+            buf->front = r;
         }
-        else {
-            Request *ptr = q->front;
+        else { // Travel till required position and insert
+            Request *ptr = buf->front;
             while(ptr->next != NULL && ptr->next->filesize < r->filesize) {
                 ptr = ptr->next;
             }
@@ -131,29 +131,35 @@ void insertSFF(Queue *q, char *filename, int filesize, int fd) {
             ptr->next = r;
         }
     }
-    q->count++;
+    buf->count++;
 }
 
-void deleteSFF(Queue *q, Request *r) {
-    if(Queue_is_empty(q)) {
-        printf("Queue is empty\n");
+void deleteSFF(Buffer *buf, Request *r) {
+    if(BufferIsEmpty(buf)) {
+        printf("Buffer is empty\n");
         return;
     }
-    makeRequest(r, q->front->filename, q->front->filesize, q->front->fd);
-    Request *temp = q->front;
-    q->front = q->front->next;
+
+    // Backup data into 'r'
+    makeRequest(r, buf->front->filename, buf->front->filesize, buf->front->fd);
+    Request *temp = buf->front;
+    if(buf->front == buf->rear) { // Single Request present 
+        buf->front = NULL;
+        buf->rear = NULL;
+    }
+    else {
+        buf->front = buf->front->next;
+    }
     free(temp);
-    q->count--;
+    buf->count--;
 }
 // ----------------------------------------------------------------
 
 
 // Global Buffers for FIFO and SFF
 // ----------------------------------------------------------------
-// Queue f_temp = { .front = NULL, .rear = NULL, .count = 0 };
-// Queue *f = &f_temp;
-
-Queue *s = NULL;
+Buffer b_temp = { .count = 0, .front = NULL, .rear = NULL };
+Buffer *buffer = &b_temp;
 // ----------------------------------------------------------------
 
 //
@@ -286,21 +292,23 @@ void* thread_request_serve_static(void* arg)
     while(1) {
         sleep(1);
         pthread_mutex_lock(&mutex);
-        while(s->count == 0)
+        while(buffer && buffer->count == 0)
             pthread_cond_wait(&full, &mutex);
-        Request r;
+        Request *r = (Request*)malloc(sizeof(Request));
         if(scheduling_algo)
-            deleteSFF(s, &r);
+            deleteSFF(buffer, r);
         else
-            deleteFIFO(s, &r);
-        printf("Request for %s is removed from the buffer\n", r.filename);
+            deleteFIFO(buffer, r);
+        printf("Request for %s of size %d is removed from the buffer\n", r->filename, r->filesize);
 
         pthread_cond_signal(&empty);
         pthread_mutex_unlock(&mutex);
 
-        // Serving request
-        request_serve_static(r.fd, r.filename, r.filesize);
-        close_or_die(r.fd);
+        if(r) {
+            // Serve request
+            request_serve_static(r->fd, r->filename, r->filesize);
+            close_or_die(r->fd);
+        }
     }
 }
 
@@ -328,9 +336,9 @@ void request_handle(int fd) {
 	// check requested content type (static/dynamic)
     is_static = request_parse_uri(uri, filename, cgiargs);
     
-    // TODO Security check - ////////////////////////
+    // Security check to not allow up in the file system - ////////////////////////
     if(strstr(filename, "..") != NULL) {
-        request_error(fd, filename, "403", "Forbidden", "Traversing up in filesystem is not allowed");
+        request_error(fd, filename, "403", "Forbidden", "Traversing up in file system is prohibited");
         return;
     }
 
@@ -348,24 +356,18 @@ void request_handle(int fd) {
 		}
 		
 		// TODO: write code to add HTTP requests in the buffer based on the scheduling policy
-
-        if(s==NULL) {
-            s = Queue_create();
-        }
         pthread_mutex_lock(&mutex);
-        while(s->count == Q_MAX)
+        while(buffer->count == buffer_max_size)
             pthread_cond_wait(&empty, &mutex);
-        if(scheduling_algo) {
-            insertSFF(s, filename, sbuf.st_size, fd);
-        }
-        else {
-            insertFIFO(s, filename, sbuf.st_size, fd);
-        }
-        printf("Request for %s is added to the buffer\n",filename);
         if(scheduling_algo)
-            printf("Added size SFF = %d\n", s->count);
+            insertSFF(buffer, filename, sbuf.st_size, fd);
         else
-            printf("Added size FIFO = %d\n", s->count);
+            insertFIFO(buffer, filename, sbuf.st_size, fd);
+        printf("Request for %s of size %d is added to the buffer\n",filename, sbuf.st_size);
+        if(scheduling_algo)
+            printf("Added size SFF = %d\n", buffer->count);
+        else
+            printf("Added size FIFO = %d\n", buffer->count);
         pthread_cond_signal(&full);
         pthread_mutex_unlock(&mutex);
     } else {

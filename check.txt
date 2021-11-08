@@ -1,0 +1,353 @@
+method:GET uri:/test15.html version:HTTP/1.1
+Request for ./test15.html of size 157 is added to the buffer
+Added size SFF = 1
+Request for ./test15.html of size 157 is removed from the buffer
+method:GET uri:/test14.html version:HTTP/1.1
+Request for ./test14.html of size 156 is added to the buffer
+Added size SFF = 1
+Request for ./test14.html of size 156 is removed from the buffer
+method:GET uri:/test13.html version:HTTP/1.1
+Request for ./test13.html of size 155 is added to the buffer
+Added size SFF = 1
+method:GET uri:/test12.html version:HTTP/1.1
+Request for ./test12.html of size 154 is added to the buffer
+Added size SFF = 2
+method:GET uri:/test11.html version:HTTP/1.1
+Request for ./test11.html of size 153 is added to the buffer
+Added size SFF = 3
+method:GET uri:/test10.html version:HTTP/1.1
+Request for ./test10.html of size 152 is added to the buffer
+Added size SFF = 4
+method:GET uri:/test9.html version:HTTP/1.1
+Request for ./test9.html of size 150 is added to the buffer
+Added size SFF = 5
+method:GET uri:/test8.html version:HTTP/1.1
+Request for ./test8.html of size 149 is added to the buffer
+Added size SFF = 6
+method:GET uri:/test7.html version:HTTP/1.1
+Request for ./test7.html of size 148 is added to the buffer
+Added size SFF = 7
+method:GET uri:/test6.html version:HTTP/1.1
+Request for ./test6.html of size 147 is added to the buffer
+Added size SFF = 8
+method:GET uri:/test5.html version:HTTP/1.1
+Request for ./test5.html of size 146 is added to the buffer
+Added size SFF = 9
+method:GET uri:/test4.html version:HTTP/1.1
+Request for ./test4.html of size 145 is added to the buffer
+Added size SFF = 10
+method:GET uri:/test3.html version:HTTP/1.1
+Request for ./test3.html of size 144 is added to the buffer
+Added size SFF = 11
+method:GET uri:/test2.html version:HTTP/1.1
+Request for ./test2.html of size 143 is added to the buffer
+Added size SFF = 12
+method:GET uri:/test1.html version:HTTP/1.1
+Request for ./test1.html of size 141 is added to the buffer
+Added size SFF = 13
+method:GET uri:/test15.html version:HTTP/1.1
+Request for ./test15.html of size 157 is added to the buffer
+Added size SFF = 14
+method:GET uri:/test14.html version:HTTP/1.1
+Request for ./test14.html of size 156 is added to the buffer
+Added size SFF = 15
+method:GET uri:/test13.html version:HTTP/1.1
+Request for ./test13.html of size 155 is added to the buffer
+Added size SFF = 16
+method:GET uri:/test12.html version:HTTP/1.1
+Request for ./test12.html of size 154 is added to the buffer
+Added size SFF = 17
+method:GET uri:/test11.html version:HTTP/1.1
+Request for ./test11.html of size 153 is added to the buffer
+Added size SFF = 18
+method:GET uri:/test10.html version:HTTP/1.1
+Request for ./test10.html of size 152 is added to the buffer
+Added size SFF = 19
+method:GET uri:/test9.html version:HTTP/1.1
+Request for ./test9.html of size 150 is added to the buffer
+Added size SFF = 20
+method:GET uri:/test8.html version:HTTP/1.1
+Request for ./test8.html of size 149 is added to the buffer
+Added size SFF = 21
+method:GET uri:/test7.html version:HTTP/1.1
+Request for ./test7.html of size 148 is added to the buffer
+Added size SFF = 22
+method:GET uri:/test6.html version:HTTP/1.1
+Request for ./test6.html of size 147 is added to the buffer
+Added size SFF = 23
+method:GET uri:/test5.html version:HTTP/1.1
+Request for ./test5.html of size 146 is added to the buffer
+Added size SFF = 24
+method:GET uri:/test4.html version:HTTP/1.1
+Request for ./test4.html of size 145 is added to the buffer
+Added size SFF = 25
+method:GET uri:/test3.html version:HTTP/1.1
+Request for ./test3.html of size 144 is added to the buffer
+Added size SFF = 26
+method:GET uri:/test2.html version:HTTP/1.1
+Request for ./test2.html of size 143 is added to the buffer
+Added size SFF = 27
+method:GET uri:/test1.html version:HTTP/1.1
+Request for ./test1.html of size 141 is added to the buffer
+Added size SFF = 28
+method:GET uri:/test15.html version:HTTP/1.1
+Request for ./test15.html of size 157 is added to the buffer
+Added size SFF = 29
+method:GET uri:/test14.html version:HTTP/1.1
+Request for ./test14.html of size 156 is added to the buffer
+Added size SFF = 30
+method:GET uri:/test13.html version:HTTP/1.1
+Request for ./test13.html of size 155 is added to the buffer
+Added size SFF = 31
+method:GET uri:/test12.html version:HTTP/1.1
+Request for ./test12.html of size 154 is added to the buffer
+Added size SFF = 32
+method:GET uri:/test11.html version:HTTP/1.1
+Request for ./test11.html of size 153 is added to the buffer
+Added size SFF = 33
+method:GET uri:/test10.html version:HTTP/1.1
+Request for ./test10.html of size 152 is added to the buffer
+Added size SFF = 34
+method:GET uri:/test9.html version:HTTP/1.1
+Request for ./test9.html of size 150 is added to the buffer
+Added size SFF = 35
+method:GET uri:/test8.html version:HTTP/1.1
+Request for ./test8.html of size 149 is added to the buffer
+Added size SFF = 36
+method:GET uri:/test7.html version:HTTP/1.1
+Request for ./test7.html of size 148 is added to the buffer
+Added size SFF = 37
+method:GET uri:/test6.html version:HTTP/1.1
+Request for ./test6.html of size 147 is added to the buffer
+Added size SFF = 38
+method:GET uri:/test5.html version:HTTP/1.1
+Request for ./test5.html of size 146 is added to the buffer
+Added size SFF = 39
+method:GET uri:/test4.html version:HTTP/1.1
+Request for ./test4.html of size 145 is added to the buffer
+Added size SFF = 40
+method:GET uri:/test3.html version:HTTP/1.1
+Request for ./test3.html of size 144 is added to the buffer
+Added size SFF = 41
+method:GET uri:/test2.html version:HTTP/1.1
+Request for ./test2.html of size 143 is added to the buffer
+Added size SFF = 42
+method:GET uri:/test1.html version:HTTP/1.1
+Request for ./test1.html of size 141 is added to the buffer
+Added size SFF = 43
+method:GET uri:/test15.html version:HTTP/1.1
+Request for ./test15.html of size 157 is added to the buffer
+Added size SFF = 44
+method:GET uri:/test14.html version:HTTP/1.1
+Request for ./test14.html of size 156 is added to the buffer
+Added size SFF = 45
+method:GET uri:/test13.html version:HTTP/1.1
+Request for ./test13.html of size 155 is added to the buffer
+Added size SFF = 46
+method:GET uri:/test12.html version:HTTP/1.1
+Request for ./test12.html of size 154 is added to the buffer
+Added size SFF = 47
+method:GET uri:/test11.html version:HTTP/1.1
+Request for ./test11.html of size 153 is added to the buffer
+Added size SFF = 48
+method:GET uri:/test10.html version:HTTP/1.1
+Request for ./test10.html of size 152 is added to the buffer
+Added size SFF = 49
+method:GET uri:/test9.html version:HTTP/1.1
+Request for ./test9.html of size 150 is added to the buffer
+Added size SFF = 50
+method:GET uri:/test8.html version:HTTP/1.1
+Request for ./test8.html of size 149 is added to the buffer
+Added size SFF = 51
+method:GET uri:/test7.html version:HTTP/1.1
+Request for ./test7.html of size 148 is added to the buffer
+Added size SFF = 52
+method:GET uri:/test6.html version:HTTP/1.1
+Request for ./test6.html of size 147 is added to the buffer
+Added size SFF = 53
+method:GET uri:/test5.html version:HTTP/1.1
+Request for ./test5.html of size 146 is added to the buffer
+Added size SFF = 54
+method:GET uri:/test4.html version:HTTP/1.1
+Request for ./test4.html of size 145 is added to the buffer
+Added size SFF = 55
+method:GET uri:/test3.html version:HTTP/1.1
+Request for ./test3.html of size 144 is added to the buffer
+Added size SFF = 56
+method:GET uri:/test2.html version:HTTP/1.1
+Request for ./test2.html of size 143 is added to the buffer
+Added size SFF = 57
+method:GET uri:/test1.html version:HTTP/1.1
+Request for ./test1.html of size 141 is added to the buffer
+Added size SFF = 58
+method:GET uri:/test15.html version:HTTP/1.1
+Request for ./test15.html of size 157 is added to the buffer
+Added size SFF = 59
+method:GET uri:/test14.html version:HTTP/1.1
+Request for ./test14.html of size 156 is added to the buffer
+Added size SFF = 60
+method:GET uri:/test13.html version:HTTP/1.1
+Request for ./test13.html of size 155 is added to the buffer
+Added size SFF = 61
+method:GET uri:/test12.html version:HTTP/1.1
+Request for ./test12.html of size 154 is added to the buffer
+Added size SFF = 62
+method:GET uri:/test11.html version:HTTP/1.1
+Request for ./test11.html of size 153 is added to the buffer
+Added size SFF = 63
+method:GET uri:/test10.html version:HTTP/1.1
+Request for ./test10.html of size 152 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test9.html version:HTTP/1.1
+Request for ./test1.html of size 141 is removed from the buffer
+Request for ./test9.html of size 150 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test8.html version:HTTP/1.1
+Request for ./test1.html of size 141 is removed from the buffer
+Request for ./test8.html of size 149 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test7.html version:HTTP/1.1
+Request for ./test1.html of size 141 is removed from the buffer
+Request for ./test7.html of size 148 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test6.html version:HTTP/1.1
+Request for ./test1.html of size 141 is removed from the buffer
+Request for ./test6.html of size 147 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test5.html version:HTTP/1.1
+Request for ./test2.html of size 143 is removed from the buffer
+Request for ./test5.html of size 146 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test4.html version:HTTP/1.1
+Request for ./test2.html of size 143 is removed from the buffer
+Request for ./test4.html of size 145 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test3.html version:HTTP/1.1
+Request for ./test2.html of size 143 is removed from the buffer
+Request for ./test3.html of size 144 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test2.html version:HTTP/1.1
+Request for ./test2.html of size 143 is removed from the buffer
+Request for ./test2.html of size 143 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test1.html version:HTTP/1.1
+Request for ./test2.html of size 143 is removed from the buffer
+Request for ./test1.html of size 141 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test15.html version:HTTP/1.1
+Request for ./test1.html of size 141 is removed from the buffer
+Request for ./test15.html of size 157 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test14.html version:HTTP/1.1
+Request for ./test3.html of size 144 is removed from the buffer
+Request for ./test14.html of size 156 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test13.html version:HTTP/1.1
+Request for ./test3.html of size 144 is removed from the buffer
+Request for ./test13.html of size 155 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test12.html version:HTTP/1.1
+Request for ./test3.html of size 144 is removed from the buffer
+Request for ./test12.html of size 154 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test11.html version:HTTP/1.1
+Request for ./test3.html of size 144 is removed from the buffer
+Request for ./test11.html of size 153 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test10.html version:HTTP/1.1
+Request for ./test3.html of size 144 is removed from the buffer
+Request for ./test10.html of size 152 is added to the buffer
+Added size SFF = 64
+Request for ./test4.html of size 145 is removed from the buffer
+method:GET uri:/test9.html version:HTTP/1.1
+Request for ./test9.html of size 150 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test8.html version:HTTP/1.1
+Request for ./test4.html of size 145 is removed from the buffer
+Request for ./test8.html of size 149 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test7.html version:HTTP/1.1
+Request for ./test4.html of size 145 is removed from the buffer
+Request for ./test7.html of size 148 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test6.html version:HTTP/1.1
+Request for ./test4.html of size 145 is removed from the buffer
+Request for ./test6.html of size 147 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test5.html version:HTTP/1.1
+Request for ./test4.html of size 145 is removed from the buffer
+Request for ./test5.html of size 146 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test4.html version:HTTP/1.1
+Request for ./test5.html of size 146 is removed from the buffer
+Request for ./test4.html of size 145 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test3.html version:HTTP/1.1
+Request for ./test4.html of size 145 is removed from the buffer
+Request for ./test3.html of size 144 is added to the buffer
+Added size SFF = 64
+method:GET uri:/test2.html version:HTTP/1.1
+Request for ./test3.html of size 144 is removed from the buffer
+Request for ./test2.html of size 143 is added to the buffer
+Added size SFF = 64
+Request for ./test2.html of size 143 is removed from the buffer
+method:GET uri:/test1.html version:HTTP/1.1
+Request for ./test1.html of size 141 is added to the buffer
+Added size SFF = 64
+Request for ./test1.html of size 141 is removed from the buffer
+Request for ./test5.html of size 146 is removed from the buffer
+Request for ./test5.html of size 146 is removed from the buffer
+Request for ./test5.html of size 146 is removed from the buffer
+Request for ./test5.html of size 146 is removed from the buffer
+Request for ./test5.html of size 146 is removed from the buffer
+Request for ./test6.html of size 147 is removed from the buffer
+Request for ./test6.html of size 147 is removed from the buffer
+Request for ./test6.html of size 147 is removed from the buffer
+Request for ./test6.html of size 147 is removed from the buffer
+Request for ./test6.html of size 147 is removed from the buffer
+Request for ./test6.html of size 147 is removed from the buffer
+Request for ./test7.html of size 148 is removed from the buffer
+Request for ./test7.html of size 148 is removed from the buffer
+Request for ./test7.html of size 148 is removed from the buffer
+Request for ./test7.html of size 148 is removed from the buffer
+Request for ./test7.html of size 148 is removed from the buffer
+Request for ./test7.html of size 148 is removed from the buffer
+Request for ./test8.html of size 149 is removed from the buffer
+Request for ./test8.html of size 149 is removed from the buffer
+Request for ./test8.html of size 149 is removed from the buffer
+Request for ./test8.html of size 149 is removed from the buffer
+Request for ./test8.html of size 149 is removed from the buffer
+Request for ./test8.html of size 149 is removed from the buffer
+Request for ./test9.html of size 150 is removed from the buffer
+Request for ./test9.html of size 150 is removed from the buffer
+Request for ./test9.html of size 150 is removed from the buffer
+Request for ./test9.html of size 150 is removed from the buffer
+Request for ./test9.html of size 150 is removed from the buffer
+Request for ./test9.html of size 150 is removed from the buffer
+Request for ./test10.html of size 152 is removed from the buffer
+Request for ./test10.html of size 152 is removed from the buffer
+Request for ./test10.html of size 152 is removed from the buffer
+Request for ./test10.html of size 152 is removed from the buffer
+Request for ./test10.html of size 152 is removed from the buffer
+Request for ./test10.html of size 152 is removed from the buffer
+Request for ./test11.html of size 153 is removed from the buffer
+Request for ./test11.html of size 153 is removed from the buffer
+Request for ./test11.html of size 153 is removed from the buffer
+Request for ./test11.html of size 153 is removed from the buffer
+Request for ./test11.html of size 153 is removed from the buffer
+Request for ./test11.html of size 153 is removed from the buffer
+Request for ./test12.html of size 154 is removed from the buffer
+Request for ./test12.html of size 154 is removed from the buffer
+Request for ./test12.html of size 154 is removed from the buffer
+Request for ./test12.html of size 154 is removed from the buffer
+Request for ./test12.html of size 154 is removed from the buffer
+Request for ./test12.html of size 154 is removed from the buffer
+Request for ./test13.html of size 155 is removed from the buffer
+Request for ./test13.html of size 155 is removed from the buffer
+Request for ./test13.html of size 155 is removed from the buffer
+Request for ./test13.html of size 155 is removed from the buffer
+Request for ./test13.html of size 155 is removed from the buffer
+Request for ./test13.html of size 155 is removed from the buffer
+Buffer is empty
+Request for (null) of size 0 is removed from the buffer
+Segmentation fault (core dumped)

@@ -6,7 +6,7 @@ for j in $(seq 1 6)
 do
 	for ((i=15;i>0;i-=1)) ;
 	do
-		./../'Basic single-threaded webserver'/wclient localhost 8003 /test$i.html &
+		./wclient localhost 8003 /test$i.html &
 	done
 done
 
