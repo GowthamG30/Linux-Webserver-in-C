@@ -2,12 +2,9 @@
 #include "request.h"
 
 #define MAXBUF (8192)
-#define CYAN "\x1B[36m"  // Colours that can be used to print text
-#define WHITE "\x1B[33m" // Colours that can be used to print text
-
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t full = PTHREAD_COND_INITIALIZER;
-pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
+pthread_cond_t fullBuff = PTHREAD_COND_INITIALIZER;
+pthread_cond_t emptyBuff = PTHREAD_COND_INITIALIZER;
 
 //
 //	TODO: add code to create and manage the buffer
@@ -28,10 +25,6 @@ void makeRequest(Request *r, char *filename, int filesize, int fd) {
 	r->fd = fd;
 	r->next = NULL;
 }
-
-// void printRequest(Request r) {
-// 	printf("Request: filename = %s, filesize = %d, fd = %d\n", r.filename, r.filesize, r.fd);
-// }
 // ----------------------------------------------------------------
 
 // Buffer - used as a wrapper for Request
@@ -81,14 +74,13 @@ void insertFIFO(Buffer *buf, char *filename, int filesize, int fd) {
 	buf->count++;
 }
 
-void deleteFIFO(Buffer *buf, Request *r) {
+Request* deleteFIFO(Buffer *buf) {
 	if(BufferIsEmpty(buf)) {
 		printf("Buffer is empty\n");
 		return;
 	}
 
-	// Backup data into 'r'
-	makeRequest(r, buf->front->filename, buf->front->filesize, buf->front->fd);
+	// Backup data into 'temp'
 	Request *temp = buf->front;
 	if(buf->front == buf->rear) {	// Single Request present 
 		buf->front = NULL;
@@ -97,8 +89,8 @@ void deleteFIFO(Buffer *buf, Request *r) {
 	else {
 		buf->front = buf->front->next;
 	}
-	free(temp);
 	buf->count--;
+	return temp;
 }
 // ----------------------------------------------------------------
 
@@ -135,14 +127,13 @@ void insertSFF(Buffer *buf, char *filename, int filesize, int fd) {
 	buf->count++;
 }
 
-void deleteSFF(Buffer *buf, Request *r) {
+Request* deleteSFF(Buffer *buf) {
 	if(BufferIsEmpty(buf)) {
 		printf("Buffer is empty\n");
 		return;
 	}
 
-	// Backup data into 'r'
-	makeRequest(r, buf->front->filename, buf->front->filesize, buf->front->fd);
+	// Backup data into 'temp'
 	Request *temp = buf->front;
 	if(buf->front == buf->rear) {	// Single Request present 
 		buf->front = NULL;
@@ -151,8 +142,8 @@ void deleteSFF(Buffer *buf, Request *r) {
 	else {
 		buf->front = buf->front->next;
 	}
-	free(temp);
 	buf->count--;
+	return temp;
 }
 // ----------------------------------------------------------------
 
@@ -291,29 +282,28 @@ void* thread_request_serve_static(void* arg)
 {
 	// TODO: write code to actualy respond to HTTP requests
 	// ----------------------------------------------------------------
-	while(1) {
-		// sleep for a while
-		sleep(1);
+	while(1) { // Loop until the buffer is empty
 
 		// Mutex lock for the critical section
 		pthread_mutex_lock(&mutex);
 		// Wait for the buffer to have something in it
 		while(buffer && buffer->count == 0)
-			pthread_cond_wait(&full, &mutex);
+			pthread_cond_wait(&fullBuff, &mutex);
 
 		// Create request to store the removed request from the buffer 
-		Request *r = (Request*)malloc(sizeof(Request));
-		if(r) {
-			// Remove the request from the buffer to serve it
-			if(scheduling_algo) // SFF Scheduling
-				deleteSFF(buffer, r);
-			else                // FIFO Scheduling
-				deleteFIFO(buffer, r);
-			printf("%sRequest for %s is removed from the buffer.\n", CYAN, r->filename);
-		}
+		Request *r = NULL;
+
+		// Remove the request from the buffer to serve it
+		if(scheduling_algo) // SFF Scheduling
+			r = deleteSFF(buffer);
+		else                // FIFO Scheduling
+			r = deleteFIFO(buffer);
+
+		if(r)
+			printf("Request for %s is removed from the buffer.\n", r->filename);
 
 		// Release signal on the condition variable 'empty'
-		pthread_cond_signal(&empty);
+		pthread_cond_signal(&emptyBuff);
 		// Mutex unlock for the critical section
 		pthread_mutex_unlock(&mutex);
 
@@ -378,7 +368,7 @@ void request_handle(int fd) {
 		pthread_mutex_lock(&mutex);
 		// Wait for the buffer to have free space available
 		while(buffer && buffer->count == buffer_max_size)
-			pthread_cond_wait(&empty, &mutex);
+			pthread_cond_wait(&emptyBuff, &mutex);
 		if(buffer) {
 			// Insert the request into the buffer
 			if(scheduling_algo)	// SFF Scheduling
@@ -387,17 +377,17 @@ void request_handle(int fd) {
 				insertFIFO(buffer, filename, sbuf.st_size, fd);
 		}
 		
-		printf("%sRequest for %s is added to the buffer.\n", WHITE, filename);
+		printf("Request for %s is added to the buffer.\n", filename);
 
-		if(buffer) {
-			if(scheduling_algo)
-				printf("Added, size of SFF = %d\n", buffer->count);
-			else
-				printf("Added, size of FIFO = %d\n", buffer->count);
-		}
+		// if(buffer) {
+		// 	if(scheduling_algo)	// SFF Scheduling
+		// 		printf("Added: size of SFF = %d\n", buffer->count);
+		// 	else				// FIFO Scheduling
+		// 		printf("Added: size of FIFO = %d\n", buffer->count);
+		// }
 
 		// Release signal on the condition variable 'full'
-		pthread_cond_signal(&full);
+		pthread_cond_signal(&fullBuff);
 		// Mutex unlock for the critical section
 		pthread_mutex_unlock(&mutex);
 		// ----------------------------------------------------------------
